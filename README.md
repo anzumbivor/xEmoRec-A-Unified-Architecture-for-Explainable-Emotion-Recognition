@@ -37,7 +37,7 @@ The xEmoRec architecture consists of:
 
 ---
 
-## Repository Structure
+## 1. Repository Structure
 
 ```text
 emotion_xai_pipeline/
