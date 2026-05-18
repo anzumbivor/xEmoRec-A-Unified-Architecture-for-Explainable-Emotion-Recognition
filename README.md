@@ -1,13 +1,43 @@
 # xEmoRec: A Unified Architecture for Explainable Emotion Recognition toward Trustworthy Human-Machine Systems
 
-This repository is a GitHub-ready Python version of the original notebooks:
+xEmoRec is a reproducible Python implementation of an explainable emotion recognition framework for social media text. The project converts the original research notebooks into a modular machine-learning pipeline for training, evaluating, and interpreting a RoBERTa-CNN-BiLSTM-CLS-attention emotion classifier.
 
-- `Model Training.ipynb`
-- `Adaptive_XAI_modified_V2_Fig_Regenerated.ipynb`
+The framework is designed not only to achieve strong predictive performance, but also to evaluate whether model explanations are faithful to the model’s decision behavior. It integrates attention-based attribution, Integrated Gradients, fixed hybrid explanations, adaptive hybrid explanations, and perturbation-based faithfulness evaluation.
 
-The code is organized as a reproducible machine-learning pipeline instead of notebook cells. It trains the RoBERTa-CNN-BiLSTM-CLS-attention emotion classifier, saves checkpoints and validation artifacts, and then runs the latest adaptive-XAI faithfulness workflow.
+---
 
-## 1. Repository structure
+## Model Architecture
+
+<p align="center">
+  <img src="assets/xEmoRec_Architecture.png" width="1000"/>
+</p>
+
+The xEmoRec architecture consists of:
+
+- **Pre-trained RoBERTa encoder** for contextual token representation
+- **1D CNN with max pooling** for extracting local emotional patterns
+- **BiLSTM layer** for bidirectional temporal sequence modeling
+- **CLS-query multi-head attention** for attention-based decision aggregation
+- **Classification head** for emotion prediction
+- **Explainability framework** combining attention mapping, Integrated Gradients, fixed hybrid attribution, and adaptive hybrid attribution
+- **Faithfulness evaluation** using MoRF deletion, comprehensiveness, sufficiency, and statistical significance testing
+
+---
+
+## Key Features
+
+- Reproducible training pipeline for emotion classification
+- Modular Python implementation under `src/`
+- Command-line scripts for model training and XAI evaluation
+- Latest adaptive-XAI workflow converted from notebook to Python
+- Faithfulness-based explanation evaluation
+- Publication-ready figures and statistical outputs
+- Configurable experiment settings through command-line arguments
+- Smoke-test mode for quick pipeline verification
+
+---
+
+## Repository Structure
 
 ```text
 emotion_xai_pipeline/
@@ -15,8 +45,13 @@ emotion_xai_pipeline/
 ├── requirements.txt
 ├── pyproject.toml
 ├── .gitignore
+├── assets/
+│   └── xEmoRec_Architecture.png
 ├── configs/
 │   └── README.md
+├── notebooks/
+│   ├── Model_Training.ipynb
+│   └── Adaptive_XAI_modified_V2_Fig_Regenerated.ipynb
 ├── scripts/
 │   ├── train_model.py
 │   ├── run_adaptive_xai.py
