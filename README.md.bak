@@ -1,0 +1,184 @@
+# Emotion Classification + Adaptive XAI Faithfulness Pipeline
+
+This repository is a GitHub-ready Python version of the original notebooks:
+
+- `Model Training.ipynb`
+- `Adaptive_XAI_modified_V2_Fig_Regenerated.ipynb` **(treated as the latest XAI version)**
+
+The code is organized as a reproducible machine-learning pipeline instead of notebook cells. It trains the RoBERTa-CNN-BiLSTM-CLS-attention emotion classifier, saves checkpoints and validation artifacts, and then runs the latest adaptive-XAI faithfulness workflow with regenerated publication-ready figures.
+
+## 1. Repository structure
+
+```text
+emotion_xai_pipeline/
+├── README.md
+├── requirements.txt
+├── pyproject.toml
+├── .gitignore
+├── configs/
+│   └── README.md
+├── scripts/
+│   ├── train_model.py
+│   ├── run_adaptive_xai.py
+│   └── run_pipeline.py
+└── src/
+    └── emotion_xai/
+        ├── __init__.py
+        ├── data.py
+        ├── faithfulness.py
+        ├── model.py
+        ├── plotting.py
+        ├── reproducibility.py
+        ├── train.py
+        └── xai.py
+```
+
+## 2. Setup
+
+Use Python 3.10+ and install the package in editable mode:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -U pip
+pip install -e .
+```
+
+Or install directly from `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
+
+## 3. Data format
+
+The input CSV must contain at least these columns:
+
+```text
+text,label
+```
+
+Expected example:
+
+```csv
+text,label
+"I am so happy today",1
+"This makes me angry",3
+```
+
+The original notebook used `text.csv`. For GitHub, place the dataset under `data/text.csv` or pass the path explicitly.
+
+## 4. Train the model
+
+```bash
+python scripts/train_model.py \
+  --data-path data/text.csv \
+  --out-dir runs_emotion_cls_2 \
+  --epochs 50 \
+  --batch-size 32 \
+  --max-length 64 \
+  --seed 42
+```
+
+Main outputs:
+
+```text
+runs_emotion_cls_2/
+├── best_model_cls.pt
+├── training_config.json
+├── training_summary.json
+├── history_cls.csv
+├── classification_report_val.json
+├── validation_predictions.csv
+├── confusion_matrix_val_cls.png
+├── loss_curve_cls.png
+├── accuracy_curve_cls.png
+├── macro_f1_curve_cls.png
+└── example_explanations_cls_attention_ig_hybrid.csv
+```
+
+## 5. Run the latest adaptive-XAI analysis
+
+Run this after training, using the checkpoint from the previous step:
+
+```bash
+python scripts/run_adaptive_xai.py \
+  --data-path data/text.csv \
+  --model-path runs_emotion_cls_2/best_model_cls.pt \
+  --out-dir runs_emotion_cls_2/xai_faithfulness_v6_pubready_figures \
+  --eval-pool-size 600 \
+  --m-steps-screen 16 \
+  --m-steps-deep 32
+```
+
+Main outputs:
+
+```text
+xai_faithfulness_v6_pubready_figures/
+├── adaptive_xai_config.json
+├── xai_eval_instances.csv
+├── screening_metrics_all_candidates.csv
+├── screening_summary_all_candidates.csv
+├── final_metrics_shortlist.csv
+├── summary_overall.csv
+├── repeated_runs_aggregate.csv
+├── repeated_runs_summary.csv
+├── friedman_auc.csv
+├── pairwise_wilcoxon_with_holm.csv
+├── topk_sweep_summary.csv
+├── classwise_auc.csv
+├── classwise_auc_pivot.csv
+├── subset_analysis.csv
+├── top_tokens_per_instance.csv
+├── report.txt
+├── fig01_deletion_curves_morf_ci_pubready.png
+├── fig02_deletion_auc_boxplot_pubready.png
+├── fig03_comprehensiveness_boxplot_pubready.png
+├── fig04_sufficiency_boxplot_pubready.png
+├── fig05_attention_ig_spearman_histogram_pubready.png
+├── fig06_adaptive_alpha_histogram_pubready.png
+├── fig07_classwise_deletion_auc_heatmap_pubready.png
+├── fig08_topk_comprehensiveness_sweep_pubready.png
+└── fig09_topk_sufficiency_sweep_pubready.png
+```
+
+## 6. Run the full pipeline in one command
+
+```bash
+python scripts/run_pipeline.py \
+  --data-path data/text.csv \
+  --out-dir runs_emotion_cls_2 \
+  --epochs 50 \
+  --batch-size 32 \
+  --eval-pool-size 600
+```
+
+## 7. Reproducibility notes
+
+- The split is stratified and controlled by `--seed` / `--split-random-state`.
+- Every run writes the resolved configuration to JSON inside the output directory.
+- RoBERTa is frozen, as in the notebooks.
+- The latest adaptive-XAI notebook is used as the source of truth for the XAI workflow.
+- XAI can be computationally expensive. For a quick smoke test, reduce `--eval-pool-size`, `--m-steps-screen`, and `--m-steps-deep`.
+
+Example smoke test:
+
+```bash
+python scripts/run_adaptive_xai.py \
+  --data-path data/text.csv \
+  --model-path runs_emotion_cls_2/best_model_cls.pt \
+  --out-dir runs_emotion_cls_2/xai_smoke_test \
+  --eval-pool-size 20 \
+  --m-steps-screen 4 \
+  --m-steps-deep 8
+```
+
+## 8. Suggested Git workflow
+
+```bash
+git init
+git add README.md requirements.txt pyproject.toml .gitignore configs scripts src
+git commit -m "Add reproducible emotion XAI pipeline"
+```
+
+Do not commit large files such as datasets, model checkpoints, or generated run directories unless your repository intentionally tracks them through Git LFS.
