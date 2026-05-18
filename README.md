@@ -1,8 +1,6 @@
 # xEmoRec: A Unified Architecture for Explainable Emotion Recognition toward Trustworthy Human-Machine Systems
 
-xEmoRec is a reproducible Python implementation of an explainable emotion recognition framework for social media text. The project converts the original research notebooks into a modular machine-learning pipeline for training, evaluating, and interpreting a RoBERTa-CNN-BiLSTM-CLS-attention emotion classifier.
-
-The framework is designed not only to achieve strong predictive performance, but also to evaluate whether model explanations are faithful to the model’s decision behavior. It integrates attention-based attribution, Integrated Gradients, fixed hybrid explanations, adaptive hybrid explanations, and perturbation-based faithfulness evaluation.
+xEmoRec is a reproducible Python implementation of an explainable emotion recognition framework for social media text. The project converts the original research notebooks into a modular machine-learning pipeline for training, evaluating, and interpreting a RoBERTa-CNN-BiLSTM-CLS-attention emotion classifier. The framework is designed not only to achieve strong predictive performance, but also to evaluate whether model explanations are faithful to the model’s decision behavior. It integrates attention-based attribution, Integrated Gradients, fixed hybrid explanations, adaptive hybrid explanations, and perturbation-based faithfulness evaluation.
 
 ---
 
