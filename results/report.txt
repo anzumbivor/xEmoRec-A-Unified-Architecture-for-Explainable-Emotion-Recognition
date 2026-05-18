@@ -1,0 +1,66 @@
+Explainability / Faithfulness Summary
+============================================================
+Instances analyzed: 600
+Device: cuda
+IG steps screening: 16
+IG steps deep evaluation: 32
+Deletion fractions: [0.1, 0.2, 0.30000000000000004, 0.4, 0.5, 0.6, 0.7000000000000001, 0.8, 0.9, 1.0]
+Top-k default for comp/suff: 0.2
+Top-k sweep: [0.05, 0.1, 0.15, 0.2, 0.3]
+
+Best screening methods:
+  best fixed hybrid    : hybrid_fixed__norm=minmax__alpha=0.60
+  best adaptive hybrid : hybrid_adaptive__norm=sum__amin=0.10__amax=0.60
+
+Overall ranking by deletion AUC (lower is better):
+  Integrated Gradients | AUC 0.2577 ± 0.1621 [95% CI 0.2449, 0.2701] | Comp 0.6575 | Suff 0.2089
+  Hybrid (Adaptive α) | AUC 0.2606 ± 0.1646 [95% CI 0.2475, 0.2735] | Comp 0.6431 | Suff 0.2176
+  Hybrid (Fixed α) | AUC 0.2635 ± 0.1661 [95% CI 0.2502, 0.2766] | Comp 0.6331 | Suff 0.2245
+         Attention | AUC 0.3081 ± 0.1949 [95% CI 0.2930, 0.3248] | Comp 0.5955 | Suff 0.3674
+            Random | AUC 0.4518 ± 0.1452 [95% CI 0.4399, 0.4627] | Comp 0.2515 | Suff 0.6815
+
+Repeated stratified runs (mean of run-level means):
+  Integrated Gradients | mean AUC 0.2578 ± 0.0037
+  Hybrid (Adaptive α) | mean AUC 0.2609 ± 0.0041
+  Hybrid (Fixed α) | mean AUC 0.2638 ± 0.0035
+         Attention | mean AUC 0.3084 ± 0.0036
+            Random | mean AUC 0.4519 ± 0.0038
+
+Friedman test on per-instance AUCs: stat=798.3623, p=1.73812e-171
+
+Pairwise Wilcoxon tests (Holm-adjusted):
+                 auc | Integrated Gradients vs Random | mean diff=-0.194058 | p=8.24822e-85 | p_holm=8.24822e-84
+                 auc | Hybrid (Adaptive α) vs Random | mean diff=-0.191180 | p=3.92733e-83 | p_holm=3.5346e-82
+                 auc | Hybrid (Fixed α) vs Random | mean diff=-0.188297 | p=7.97288e-82 | p_holm=6.3783e-81
+                 auc | Attention vs Random | mean diff=-0.143691 | p=2.30562e-60 | p_holm=1.61393e-59
+                 auc | Attention vs Integrated Gradients | mean diff=0.050367 | p=4.4179e-16 | p_holm=2.65074e-15
+                 auc | Attention vs Hybrid (Adaptive α) | mean diff=0.047489 | p=1.74806e-15 | p_holm=8.7403e-15
+                 auc | Attention vs Hybrid (Fixed α) | mean diff=0.044606 | p=9.11642e-15 | p_holm=3.64657e-14
+                 auc | Integrated Gradients vs Hybrid (Fixed α) | mean diff=-0.005761 | p=0.00898588 | p_holm=0.0269576
+                 auc | Hybrid (Fixed α) vs Hybrid (Adaptive α) | mean diff=0.002882 | p=0.0146884 | p_holm=0.0293767
+                 auc | Integrated Gradients vs Hybrid (Adaptive α) | mean diff=-0.002879 | p=0.224218 | p_holm=0.224218
+   comprehensiveness | Integrated Gradients vs Random | mean diff=0.406018 | p=1.60969e-77 | p_holm=1.60969e-76
+   comprehensiveness | Hybrid (Adaptive α) vs Random | mean diff=0.391577 | p=1.15937e-73 | p_holm=1.04343e-72
+   comprehensiveness | Hybrid (Fixed α) vs Random | mean diff=0.381616 | p=1.88608e-71 | p_holm=1.50886e-70
+   comprehensiveness | Attention vs Random | mean diff=0.343991 | p=2.8975e-65 | p_holm=2.02825e-64
+   comprehensiveness | Attention vs Integrated Gradients | mean diff=-0.062027 | p=4.68747e-06 | p_holm=2.81248e-05
+   comprehensiveness | Attention vs Hybrid (Adaptive α) | mean diff=-0.047586 | p=0.000346207 | p_holm=0.00173104
+   comprehensiveness | Integrated Gradients vs Hybrid (Fixed α) | mean diff=0.024402 | p=0.00102192 | p_holm=0.0040877
+   comprehensiveness | Integrated Gradients vs Hybrid (Adaptive α) | mean diff=0.014441 | p=0.00441773 | p_holm=0.0132532
+   comprehensiveness | Attention vs Hybrid (Fixed α) | mean diff=-0.037625 | p=0.00536674 | p_holm=0.0132532
+   comprehensiveness | Hybrid (Fixed α) vs Hybrid (Adaptive α) | mean diff=-0.009961 | p=0.0949835 | p_holm=0.0949835
+         sufficiency | Integrated Gradients vs Random | mean diff=-0.472628 | p=7.12039e-82 | p_holm=7.12039e-81
+         sufficiency | Hybrid (Adaptive α) vs Random | mean diff=-0.463902 | p=1.97476e-79 | p_holm=1.77728e-78
+         sufficiency | Hybrid (Fixed α) vs Random | mean diff=-0.457024 | p=1.12738e-78 | p_holm=9.01902e-78
+         sufficiency | Attention vs Random | mean diff=-0.314079 | p=1.25886e-47 | p_holm=8.81201e-47
+         sufficiency | Attention vs Hybrid (Adaptive α) | mean diff=0.149822 | p=1.23925e-23 | p_holm=7.43551e-23
+         sufficiency | Attention vs Hybrid (Fixed α) | mean diff=0.142945 | p=9.90304e-23 | p_holm=4.95152e-22
+         sufficiency | Attention vs Integrated Gradients | mean diff=0.158548 | p=2.77824e-22 | p_holm=1.1113e-21
+         sufficiency | Integrated Gradients vs Hybrid (Fixed α) | mean diff=-0.015604 | p=0.00783013 | p_holm=0.0234904
+         sufficiency | Hybrid (Fixed α) vs Hybrid (Adaptive α) | mean diff=0.006877 | p=0.00929746 | p_holm=0.0234904
+         sufficiency | Integrated Gradients vs Hybrid (Adaptive α) | mean diff=-0.008726 | p=0.215827 | p_holm=0.215827
+
+Attention–IG Spearman: mean=0.5250, median=0.5598
+Adaptive alpha (best adaptive hybrid): mean=0.4599, median=0.4628, min=0.1595, max=0.5918
+
+Best AUC method: Integrated Gradients
